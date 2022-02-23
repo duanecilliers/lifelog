@@ -1,3 +1,4 @@
+import { Button } from '@lifelog/ui';
 import type { MetaFunction, LoaderFunction } from 'remix';
 import { useLoaderData, json, Link } from 'remix';
 
@@ -23,5 +24,10 @@ export let meta: MetaFunction = () => {
 export default function Index() {
   // let data = useLoaderData<IndexData>();
 
-  return <div>Lifelog App</div>;
+  return (
+    <div>
+      <h1>Lifelog App</h1>
+      <Button>Button from the UI Lib</Button>
+    </div>
+  );
 }
