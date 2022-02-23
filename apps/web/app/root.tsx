@@ -12,6 +12,7 @@ import type { LinksFunction } from 'remix';
 
 import globalStylesUrl from '~/styles/global.css';
 import darkStylesUrl from '~/styles/dark.css';
+import appStyles from '~/styles/app.css';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -21,6 +22,10 @@ export let links: LinksFunction = () => {
       rel: 'stylesheet',
       href: darkStylesUrl,
       media: '(prefers-color-scheme: dark)',
+    },
+    {
+      rel: 'stylesheet',
+      href: appStyles,
     },
   ];
 };
@@ -120,5 +125,6 @@ function Document({
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>;
+  // return <div className="min-h-full min-w-full">{children}</div>;
+  return children;
 }

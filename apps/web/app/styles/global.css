@@ -11,3 +11,9 @@
   --font-body: -apple-system, 'Segoe UI', Helvetica Neue, Helvetica, Roboto,
     Arial, sans-serif, system-ui, 'Apple Color Emoji', 'Segoe UI Emoji';
 }
+
+html,
+body {
+  width: 100%;
+  height: 100vh;
+}

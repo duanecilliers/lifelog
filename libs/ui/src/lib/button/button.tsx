@@ -5,13 +5,19 @@ import '../../styles/index.css';
 export interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   variant?: 'text' | 'contained' | 'outline';
+  fullWidth?: boolean;
 }
 
-export function Button({ children, variant = 'contained' }: ButtonProps) {
+export function Button({
+  children,
+  variant = 'contained',
+  fullWidth = false,
+}: ButtonProps) {
   return (
     <button
       className={`
       focus:outline-none focus:ring py-2 px-5 text-sm leading-5 rounded-full font-semibold transition-all
+      ${fullWidth && ' w-full'}
       ${
         variant === 'text' &&
         ' border-2 border-transparent bg-transparent text-blue-400'
