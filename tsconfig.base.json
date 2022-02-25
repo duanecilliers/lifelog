@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@lifelog/data": ["libs/data/src/index.ts"],
       "@lifelog/ui": ["libs/ui/src/index.ts"]
     }
   },

@@ -8,8 +8,8 @@ type LoginResponse {
 }
 
 input LoginUserInput {
+  email: String!
   password: String!
-  username: String!
 }
 
 type Mutation {
@@ -18,11 +18,11 @@ type Mutation {
 }
 
 type Query {
-  user(username: String!): User!
+  user(email: String!): User!
   users: [User!]!
 }
 
 type User {
+  email: String!
   id: Int!
-  username: String!
 }

@@ -45,3 +45,7 @@ apps/**/.cache
 
 ## Environment
 **/*.env.local
+
+## Prisma
+prisma/dev.db
+prisma/dev.db-journal

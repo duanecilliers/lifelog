@@ -6,6 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
+import { DataService } from '@lifelog/data';
 
 @Module({
   imports: [
@@ -16,6 +17,12 @@ import { JwtStrategy } from './jwt.strategy';
       secret: process.env.NX_JWT_SECRET,
     }),
   ],
-  providers: [AuthService, AuthResolver, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    DataService,
+    AuthResolver,
+    LocalStrategy,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}

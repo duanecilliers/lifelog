@@ -1,9 +1,9 @@
+import { DataService } from '@lifelog/data';
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 
 @Module({
-  providers: [UsersResolver, UsersService],
-  exports: [UsersService],
+  providers: [UsersResolver, DataService],
+  exports: [],
 })
 export class UsersModule {}
