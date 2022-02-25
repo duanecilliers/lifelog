@@ -3,6 +3,7 @@ import { CreateUserInput } from './dto/create-user.input';
 
 @Injectable()
 export class UsersService {
+  /** @todo use Postgres with Prisma */
   private readonly users = [
     {
       id: 1,
@@ -23,7 +24,6 @@ export class UsersService {
       password: createUserInput.password,
     };
     this.users.push(user);
-    console.log('this.users', this.users);
     return user;
   }
 
