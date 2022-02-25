@@ -23,6 +23,7 @@ export class UsersService {
       password: createUserInput.password,
     };
     this.users.push(user);
+    console.log('this.users', this.users);
     return user;
   }
 
