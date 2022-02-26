@@ -28,4 +28,10 @@ export class ProfilesResolver {
   createProfile(@Args('profile') profile: CreateProfileInput) {
     return this.dataService.createProfile(profile);
   }
+
+  @Mutation(() => Profile)
+  @UseGuards(JwtAuthGuard)
+  updateProfile(@Args('profile') profile: CreateProfileInput) {
+    return this.dataService.updateProfile(profile);
+  }
 }

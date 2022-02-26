@@ -23,6 +23,7 @@ type Mutation {
   createProfile(profile: CreateProfileInput!): Profile!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(loginUserInput: LoginUserInput!): LoginResponse!
+  updateProfile(profile: CreateProfileInput!): Profile!
 }
 
 type Profile {

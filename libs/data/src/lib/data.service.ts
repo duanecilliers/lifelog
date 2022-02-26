@@ -76,4 +76,16 @@ export class DataService extends PrismaClient {
   }) {
     return await this.profile.create({ data: profile });
   }
+
+  public async updateProfile(profile: {
+    name: string;
+    birthDate: string;
+    bio: string;
+    userId: number;
+  }) {
+    return await this.profile.update({
+      where: { userId: profile.userId },
+      data: profile,
+    });
+  }
 }
