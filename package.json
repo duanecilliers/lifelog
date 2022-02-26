@@ -9,7 +9,8 @@
     "postinstall": "remix setup node",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
-    "prisma:apply": "npm run prisma:migrate && npm run prisma:generate"
+    "prisma:apply": "npm run prisma:migrate && npm run prisma:generate",
+    "postgres:run": "docker-compose up"
   },
   "private": true,
   "dependencies": {
