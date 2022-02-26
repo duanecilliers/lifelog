@@ -48,3 +48,6 @@ apps/**/.cache
 ## Prisma
 prisma/dev.db
 prisma/dev.db-journal
+
+## Temp folder
+/tmp
