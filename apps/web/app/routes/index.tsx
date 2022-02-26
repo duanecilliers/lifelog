@@ -1,6 +1,7 @@
-import { Button } from '@lifelog/ui';
 import type { MetaFunction, LoaderFunction } from 'remix';
 import { useLoaderData, json, Link } from 'remix';
+import { splitEvery, map, add } from 'ramda';
+import { Button } from '@lifelog/ui';
 import { requireUserSession } from '~/session';
 
 type IndexData = {};
@@ -17,19 +18,34 @@ export let loader: LoaderFunction = async ({ request }) => {
 // https://remix.run/api/conventions#meta
 export let meta: MetaFunction = () => {
   return {
-    title: 'Lifelog',
-    description: 'Welcome to Lifelog!',
+    title: 'Lifelog | Track, Reflect & Grow',
+    description: 'Track, Reflect & Grow',
   };
 };
 
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
   // let data = useLoaderData<IndexData>();
-
+  const age = 31;
+  const years = [...Array(100).keys()];
+  const groupedYears = splitEvery(10, map(add(1), years));
   return (
-    <div>
-      <h1>Lifelog App</h1>
-      <Button>Button from the UI Lib</Button>
+    <div className="p-2 w-screen h-screen flex flex-col items-stretch">
+      {groupedYears.map((row) => (
+        <div className="px-2 grid grid-cols-10 flex-1 space-x-1">
+          {row.map((year) => (
+            <button
+              className={`my-0.5 text-sm text-center ${
+                age > year && ` bg-gray-100 text-gray-400`
+              }
+                ${age < year && ` bg-gray-200 text-gray-800`}
+                ${true && ` bg-blue-400 text-white`}`}
+            >
+              {year}
+            </button>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
