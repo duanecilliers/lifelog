@@ -48,9 +48,11 @@ export function ErrorBoundary({ error }: { error: Error }) {
   return (
     <Document title="Error!">
       <Layout>
-        <div>
+        <div className="w-full">
           <h1>There was an error</h1>
-          <p>{error.message}</p>
+          <pre className="border border-red-700 bg-red-200 text-red-700 break-words">
+            {error.message}
+          </pre>
           <hr />
           <p>
             Hey, developer, you should replace this with what you want your
