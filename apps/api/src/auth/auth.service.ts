@@ -25,10 +25,13 @@ export class AuthService {
 
   async login(user: User) {
     return {
-      access_token: this.jwtService.sign({
-        email: user.email,
-        sub: user.id,
-      }),
+      access_token: this.jwtService.sign(
+        {
+          email: user.email,
+          sub: user.id,
+        },
+        { expiresIn: '10h' }
+      ),
       user,
     };
   }
@@ -49,10 +52,13 @@ export class AuthService {
     });
 
     return {
-      access_token: this.jwtService.sign({
-        email: createdUser.email,
-        sub: createdUser.id,
-      }),
+      access_token: this.jwtService.sign(
+        {
+          email: createdUser.email,
+          sub: createdUser.id,
+        },
+        { expiresIn: '10h' }
+      ),
       user: createdUser,
     };
   }
