@@ -10,7 +10,10 @@ export interface LifeCalendarProps {
 export function LifeCalendar({ age, linkElement }: LifeCalendarProps) {
   const groupedYears = splitEvery(10, map(add(1), range(0, 100)));
   return (
-    <div className="flex flex-col items-stretch aspect-square">
+    <div
+      data-name="life-calendar"
+      className="flex flex-col items-stretch aspect-square"
+    >
       {groupedYears.map((row, i) => (
         <div key={`row-${i}`} className="grid grid-cols-10 flex-1 space-x-1">
           {row.map((year) => {
