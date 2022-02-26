@@ -40,26 +40,26 @@ export default function Index() {
   const groupedYears = splitEvery(10, map(add(1), years));
   return (
     <div className="p-2 w-screen h-screen flex flex-col items-stretch">
-      {groupedYears.map((row, i) => (
-        <div
-          key={`row-${i}`}
-          className="px-2 grid grid-cols-10 flex-1 space-x-1"
-        >
-          {row.map((year) => (
-            <Link
-              key={`age-${year}`}
-              to={`/age/${year}`}
-              className={`my-0.5 text-sm flex items-center justify-center ${
-                age > year && ` bg-gray-100 text-gray-400`
-              }
+      <h1 className="text-lg font-bold mb-1">My life in years</h1>
+      <div className="flex flex-col items-stretch h-screen">
+        {groupedYears.map((row, i) => (
+          <div key={`row-${i}`} className="grid grid-cols-10 flex-1 space-x-1">
+            {row.map((year) => (
+              <Link
+                key={`age-${year}`}
+                to={`/age/${year}`}
+                className={`my-0.5 text-sm flex items-center justify-center ${
+                  age > year && ` bg-gray-100 text-gray-400`
+                }
                 ${age < year && ` bg-gray-200 text-gray-800`}
                 ${true && ` bg-blue-400 text-white`}`}
-            >
-              {year}
-            </Link>
-          ))}
-        </div>
-      ))}
+              >
+                {year}
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
