@@ -49,7 +49,7 @@ export default function Index() {
             <Link
               key={`age-${year}`}
               to={`/age/${year}`}
-              className={`my-0.5 text-sm text-center ${
+              className={`my-0.5 text-sm flex items-center justify-center ${
                 age > year && ` bg-gray-100 text-gray-400`
               }
                 ${age < year && ` bg-gray-200 text-gray-800`}
