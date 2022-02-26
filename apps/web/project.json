@@ -2,5 +2,19 @@
   "root": "apps/web",
   "sourceRoot": "apps/web",
   "projectType": "application",
-  "tags": []
+  "tags": [],
+  "targets": {
+    "dev": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "web:dev"
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "web:build"
+      }
+    }
+  }
 }
