@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class DataService extends PrismaClient {
@@ -34,7 +35,11 @@ export class DataService extends PrismaClient {
       Logger.log(`Admin user: ${adminUser.email}`, 'DataService');
       return true;
     } else {
-      const user = await this.user.create({ data: this.defaultAdmin });
+      const { email, password } = this.defaultAdmin;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await this.user.create({
+        data: { email, password: hashedPassword },
+      });
       Logger.log(`Admin user created: ${user.email}`, 'DataService');
     }
   }
