@@ -65,16 +65,7 @@ export class DataService extends PrismaClient {
   }
 
   public async findProfileByUserId(userId: number) {
-    return this.profile.findFirst({ where: { userId } });
-  }
-
-  public async createProfile(profile: {
-    name: string;
-    birthDate: string;
-    bio: string;
-    userId: number;
-  }) {
-    return await this.profile.create({ data: profile });
+    return await this.profile.findFirst({ where: { userId } });
   }
 
   public async updateProfile(profile: {
@@ -83,8 +74,14 @@ export class DataService extends PrismaClient {
     bio: string;
     userId: number;
   }) {
+    const { userId } = profile;
+    const _profile = await this.profile.findFirst({ where: { userId } });
+    if (_profile) {
+      return await this.profile.create({ data: profile });
+    }
+
     return await this.profile.update({
-      where: { userId: profile.userId },
+      where: { userId },
       data: profile,
     });
   }

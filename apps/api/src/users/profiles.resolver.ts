@@ -3,7 +3,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { DataService } from '@lifelog/data';
 import { Profile } from './entities/profile.entity';
-import { CreateProfileInput } from './dto/create-profile.input';
+import { UpdateProfileInput } from './dto/create-profile.input';
 
 @Resolver(() => Profile)
 export class ProfilesResolver {
@@ -25,13 +25,7 @@ export class ProfilesResolver {
 
   @Mutation(() => Profile)
   @UseGuards(JwtAuthGuard)
-  createProfile(@Args('profile') profile: CreateProfileInput) {
-    return this.dataService.createProfile(profile);
-  }
-
-  @Mutation(() => Profile)
-  @UseGuards(JwtAuthGuard)
-  updateProfile(@Args('profile') profile: CreateProfileInput) {
+  updateProfile(@Args('profile') profile: UpdateProfileInput) {
     return this.dataService.updateProfile(profile);
   }
 }
