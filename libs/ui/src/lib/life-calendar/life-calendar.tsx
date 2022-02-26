@@ -1,6 +1,6 @@
 import { ElementType } from 'react';
 import { splitEvery, map, add, range } from 'ramda';
-import Link from './link';
+import Link from './year-link';
 
 export interface LifeCalendarProps {
   age: number;
