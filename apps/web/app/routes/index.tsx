@@ -1,8 +1,7 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
 import { useLoaderData, json, Link } from 'remix';
-import { splitEvery, map, add } from 'ramda';
 import { differenceInYears } from 'date-fns';
-import { Button } from '@lifelog/ui';
+import { LifeCalendar } from '@lifelog/ui';
 import { requireUserSession } from '~/session';
 
 type IndexData = {
@@ -35,31 +34,10 @@ export let meta: MetaFunction = () => {
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
   let { age } = useLoaderData<IndexData>();
-  // const age = 31;
-  const years = [...Array(100).keys()];
-  const groupedYears = splitEvery(10, map(add(1), years));
   return (
     <div className="p-2 w-screen h-screen flex flex-col items-stretch">
       <h1 className="text-lg font-bold mb-1">My life in years</h1>
-      <div className="flex flex-col items-stretch h-screen">
-        {groupedYears.map((row, i) => (
-          <div key={`row-${i}`} className="grid grid-cols-10 flex-1 space-x-1">
-            {row.map((year) => (
-              <Link
-                key={`age-${year}`}
-                to={`/age/${year}`}
-                className={`my-0.5 text-sm flex items-center justify-center ${
-                  age > year && ` bg-gray-100 text-gray-400`
-                }
-                ${age < year && ` bg-gray-200 text-gray-800`}
-                ${true && ` bg-blue-400 text-white`}`}
-              >
-                {year}
-              </Link>
-            ))}
-          </div>
-        ))}
-      </div>
+      <LifeCalendar age={age} linkElement={Link} />
     </div>
   );
 }
