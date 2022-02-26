@@ -14,7 +14,7 @@ import { createUserSession, userHasToken } from '~/session';
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
 export const meta: MetaFunction = () => {
-  return { title: 'Lifelog | Login' };
+  return { title: 'Lifelog | Signunp' };
 };
 
 // Use this function to provide data for the route.
@@ -27,9 +27,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   return null;
 };
 
-const LoginMutation = gql`
-  mutation login($input: LoginUserInput!) {
-    login(loginUserInput: $input) {
+const SignupMutation = gql`
+  mutation signup($input: LoginUserInput!) {
+    signup(loginUserInput: $input) {
       user {
         email
       }
@@ -49,27 +49,27 @@ export const action: ActionFunction = async (args) => {
    * @link https://github.com/alexreardon/tiny-invariant
    */
   const {
-    login: { access_token },
-  } = await client.request(LoginMutation, {
+    signup: { access_token },
+  } = await client.request(SignupMutation, {
     input: { email, password },
   });
   return createUserSession(access_token, redirectTo);
 };
 
-export default function LoginRoute() {
+export default function SignupRoute() {
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+          Start your 14-day free trial
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}
           <Link
-            to="/signup"
+            to="/login"
             className="font-medium text-blue-600 hover:text-blue-500"
           >
-            start your 14-day free trial
+            login to your account
           </Link>
         </p>
         <Form method="post" className="mt-8 space-y-6">

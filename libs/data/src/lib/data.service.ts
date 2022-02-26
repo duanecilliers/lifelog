@@ -49,6 +49,7 @@ export class DataService extends PrismaClient {
     try {
       const created = await this.user.create({ data: { email, password } });
       console.log({ created });
+      return created;
     } catch (error) {
       console.log('error creating user', error);
     }
