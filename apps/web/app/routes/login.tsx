@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
 import { ActionFunction, Form, LoaderFunction, MetaFunction } from 'remix';
-import { useActionData, useLoaderData, redirect } from 'remix';
+import { redirect } from 'remix';
+import { gql } from 'graphql-request';
 import { TextField, Button } from '@lifelog/ui';
+import { client } from '~/lib/graphql-client';
+import { createUserSession, userHasToken } from '~/session';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -11,20 +13,44 @@ export const meta: MetaFunction = () => {
 
 // Use this function to provide data for the route.
 // - https://remix.run/api/conventions#loader
-export const loader: LoaderFunction = async () => {
-  return {
-    message: 'Hello, world!',
-  };
+export const loader: LoaderFunction = async ({ request }) => {
+  const hasToken = await userHasToken(request);
+  if (hasToken) {
+    return redirect('/');
+  }
+  return null;
 };
 
-export const action: ActionFunction = async ({ request }) => {
+const LoginMutation = gql`
+  mutation login($input: LoginUserInput!) {
+    login(loginUserInput: $input) {
+      user {
+        email
+      }
+      access_token
+    }
+  }
+`;
+
+export const action: ActionFunction = async (args) => {
+  const { request } = args;
   const body = await request.formData();
-  console.log('body', body);
-  return redirect('/');
+  const email = body.get('email');
+  const password = body.get('password');
+  const redirectTo = body.get('redirectTo')?.toString() || '/';
+  /**
+   * @todo handle validation with invariant and Joi?
+   * @link https://github.com/alexreardon/tiny-invariant
+   */
+  const {
+    login: { access_token },
+  } = await client.request(LoginMutation, {
+    input: { email, password },
+  });
+  return createUserSession(access_token, redirectTo);
 };
 
 export default function AppsWebAppRoutesLogin() {
-  const data = useLoaderData();
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-">
