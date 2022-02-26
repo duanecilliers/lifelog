@@ -42,7 +42,6 @@ Thumbs.db
 apps/**/build
 apps/**/.cache
 
-
 ## Environment
 **/*.env.local
 

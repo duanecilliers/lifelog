@@ -1,15 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DataService extends PrismaClient {
-  private defaultAdmin = {
-    email: process.env.NX_ADMIN_EMAIL,
-    password: process.env.NX_ADMIN_PASSWORD,
-  };
+  private defaultAdmin: { email: string; password: string };
 
-  constructor() {
+  constructor(private readonly config: ConfigService) {
     super();
+    this.defaultAdmin = this.config.get('admin');
   }
 
   public async onModuleDestroy() {

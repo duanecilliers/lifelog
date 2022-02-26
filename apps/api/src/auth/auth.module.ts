@@ -7,6 +7,7 @@ import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { DataService } from '@lifelog/data';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DataService } from '@lifelog/data';
   providers: [
     AuthService,
     DataService,
+    ConfigService,
     AuthResolver,
     LocalStrategy,
     JwtStrategy,
