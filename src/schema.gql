@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateProfileInput {
+  bio: String!
+  birthDate: String!
+  name: String!
+  userId: Int!
+}
+
 type LoginResponse {
   access_token: String!
   user: User!
@@ -13,11 +20,23 @@ input LoginUserInput {
 }
 
 type Mutation {
+  createProfile(profile: CreateProfileInput!): Profile!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(loginUserInput: LoginUserInput!): LoginResponse!
 }
 
+type Profile {
+  bio: String!
+  birthDate: String!
+  id: Int!
+  name: String!
+  user: User!
+  userId: Int!
+}
+
 type Query {
+  profile(userId: Float!): Profile!
+  profiles: [Profile!]!
   user(email: String!): User!
   users: [User!]!
 }
@@ -25,4 +44,5 @@ type Query {
 type User {
   email: String!
   id: Int!
+  profile: Profile!
 }

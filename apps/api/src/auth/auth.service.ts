@@ -12,7 +12,7 @@ export class AuthService {
     private dataService: DataService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<User> {
+  async validateUser(email: string, password: string) {
     console.log({ email });
     const user = await this.dataService.user.findUnique({ where: { email } });
     const isValid = await bcrypt.compare(password, user.password);

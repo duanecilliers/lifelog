@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Profile } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
@@ -26,7 +26,7 @@ export class DataService extends PrismaClient {
   }
 
   public async findUserByEmail(email: string) {
-    return this.user.findFirst({ where: { email } });
+    return await this.user.findFirst({ where: { email } });
   }
 
   public async ensureAdminUser() {
@@ -58,5 +58,22 @@ export class DataService extends PrismaClient {
     } catch (error) {
       console.log('error creating user', error);
     }
+  }
+
+  public async allProfiles() {
+    return await this.profile.findMany();
+  }
+
+  public async findProfileByUserId(userId: number) {
+    return this.profile.findFirst({ where: { userId } });
+  }
+
+  public async createProfile(profile: {
+    name: string;
+    birthDate: string;
+    bio: string;
+    userId: number;
+  }) {
+    return await this.profile.create({ data: profile });
   }
 }

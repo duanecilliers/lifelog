@@ -26,6 +26,9 @@ import { validationSchema } from './validation';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       driver: ApolloDriver,
       sortSchema: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'isoDate',
+      },
     }),
     UsersModule,
     AuthModule,
