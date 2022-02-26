@@ -18,7 +18,6 @@ const Link = <C extends ElementType = 'a'>({
   return (
     <Component
       {...props}
-      key={`age-${year}`}
       data-active={age === year}
       className={`my-0.5 bg-transparent text-sm flex items-center justify-center rounded-full md:m-2 lg:m-4 xl:m-8 ${
         age > year && ` text-gray-300`

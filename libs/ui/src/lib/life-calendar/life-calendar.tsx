@@ -15,12 +15,17 @@ export function LifeCalendar({ age, linkElement }: LifeCalendarProps) {
       className="flex flex-col items-stretch aspect-square"
     >
       {groupedYears.map((row, i) => (
-        <div key={`row-${i}`} className="grid grid-cols-10 flex-1 space-x-1">
-          {row.map((year) => {
+        <div
+          key={`year-row-${i}`}
+          className="grid grid-cols-10 flex-1 space-x-1"
+        >
+          {row.map((year, i) => {
             const linkProps = linkElement
               ? { to: `/age/${year}`, as: linkElement }
               : {};
-            return <Link age={age} year={year} {...linkProps} />;
+            return (
+              <Link key={`year-${i}`} age={age} year={year} {...linkProps} />
+            );
           })}
         </div>
       ))}

@@ -18,7 +18,6 @@ const WeekLink = <C extends ElementType = 'a'>({
   return (
     <Component
       {...props}
-      key={`week-${week}`}
       data-active={isActive}
       className={
         `my-0.5 bg-transparent text-sm flex items-center justify-center rounded-full md:m-2 lg:m-4 xl:m-8 ${
