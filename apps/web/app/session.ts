@@ -38,11 +38,13 @@ export async function userHasToken(request: Request) {
 
 export async function createUserSession(
   access_token: string,
+  userId: number,
   redirectTo: string
 ) {
   try {
     const session = await storage.getSession();
     session.set('token', access_token);
+    session.set('userId', userId);
     /**
      * @todo implement refresh tokens
      */

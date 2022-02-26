@@ -31,6 +31,7 @@ const SignupMutation = gql`
   mutation signup($input: LoginUserInput!) {
     signup(loginUserInput: $input) {
       user {
+        id
         email
       }
       access_token
@@ -49,11 +50,11 @@ export const action: ActionFunction = async (args) => {
    * @link https://github.com/alexreardon/tiny-invariant
    */
   const {
-    signup: { access_token },
+    signup: { access_token, user },
   } = await client.request(SignupMutation, {
     input: { email, password },
   });
-  return createUserSession(access_token, redirectTo);
+  return createUserSession(access_token, user.id, redirectTo);
 };
 
 export default function SignupRoute() {
