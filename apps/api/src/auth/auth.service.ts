@@ -43,9 +43,17 @@ export class AuthService {
     }
 
     const password = await bcrypt.hash(loginUserInput.password, 10);
-    return this.dataService.createUser({
+    const createdUser = await this.dataService.createUser({
       ...loginUserInput,
       password,
     });
+
+    return {
+      access_token: this.jwtService.sign({
+        email: createdUser.email,
+        sub: createdUser.id,
+      }),
+      user: createdUser,
+    };
   }
 }
