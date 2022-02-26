@@ -1,6 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { LoaderFunction, MetaFunction, useParams } from 'remix';
-import { useActionData, useLoaderData, redirect } from 'remix';
+import {
+  LoaderFunction,
+  useLoaderData,
+  MetaFunction,
+  useParams,
+  Link,
+} from 'remix';
+import { WeekCalendar } from '@lifelog/ui';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -19,5 +25,10 @@ export const loader: LoaderFunction = async () => {
 export default function AgeView() {
   const data = useLoaderData();
   const { age } = useParams();
-  return <p>Age: {age}</p>;
+  return (
+    <div className="p-2 w-screen h-screen flex flex-col items-stretch">
+      <h1 className="text-lg font-bold mb-1">Weeks in: {age}</h1>
+      <WeekCalendar year="2022" linkElement={Link} />
+    </div>
+  );
 }
