@@ -2,11 +2,26 @@ import type { MetaFunction, LoaderFunction } from 'remix';
 import { useLoaderData, json, Link } from 'remix';
 import { differenceInYears } from 'date-fns';
 import { LifeCalendar } from '@lifelog/ui';
-import { requireUserSession } from '~/session';
+import { gqlRequest, requireUserSession } from '~/session';
+import { gql } from 'graphql-request';
 
 type CalendarData = {
   age: number;
 };
+
+/**
+ * @todo abstract reusable queries
+ */
+const ProfileQuery = gql`
+  query profile($userId: Float!) {
+    profile(userId: $userId) {
+      id
+      name
+      bio
+      birthDate
+    }
+  }
+`;
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
@@ -15,9 +30,17 @@ type CalendarData = {
 export let loader: LoaderFunction = async ({
   request,
 }): Promise<CalendarData> => {
-  await requireUserSession(request);
-  const dateOfBirth = new Date('1990-10-10');
-  const age = differenceInYears(Date.now(), dateOfBirth);
+  const session = await requireUserSession(request);
+  const userId = session.get('userId');
+  const { profile } = await gqlRequest(request, ProfileQuery, { userId });
+  console.log({ profile });
+
+  const birthDate =
+    profile?.birthDate && new Date(parseInt(profile?.birthDate));
+
+  console.log({ birthDate });
+
+  const age = birthDate && differenceInYears(Date.now(), birthDate);
   console.log({ age });
 
   return {

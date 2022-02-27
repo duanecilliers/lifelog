@@ -13,6 +13,9 @@ export const meta: MetaFunction = () => {
   return { title: 'Lifelog | Profile' };
 };
 
+/**
+ * @todo abstract reusable queries
+ */
 const ProfileQuery = gql`
   query profile($userId: Float!) {
     profile(userId: $userId) {
