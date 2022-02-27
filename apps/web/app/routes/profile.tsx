@@ -5,7 +5,7 @@ import { gql } from 'graphql-request';
 import { ActionFunction, Form, LoaderFunction, MetaFunction } from 'remix';
 import { useActionData, useLoaderData, redirect } from 'remix';
 import { client } from '~/lib/graphql-client';
-import { getUserSession, requireUserSession } from '~/session';
+import { getUserSession, gqlRequest, requireUserSession } from '~/session';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -35,15 +35,7 @@ export const loader: LoaderFunction = async ({
 }): Promise<LoaderData> => {
   const session = await requireUserSession(request);
   const userId = session.get('userId');
-  const token = session.get('token');
-  /** @todo move client request to session to auto wrap token */
-  const { profile } = await client.request(
-    ProfileQuery,
-    { userId },
-    {
-      Authorization: `Bearer ${token}`,
-    }
-  );
+  const { profile } = await gqlRequest(request, ProfileQuery, { userId });
   return {
     profile,
   };
@@ -63,7 +55,6 @@ export const action: ActionFunction = async (args) => {
   const { request } = args;
   const session = await getUserSession(request);
   const userId = session.get('userId');
-  const token = session.get('token');
   const body = await request.formData();
   const name = body.get('name');
   const birthDate = body.get('birthDate');
@@ -73,22 +64,14 @@ export const action: ActionFunction = async (args) => {
   /** @todo validate with invariant */
   /** @todo server error handling */
 
-  /** @todo move client request to session to auto wrap token */
-  await client.request(
-    UpdateProfileMutation,
-    {
-      input: {
-        userId,
-        name,
-        bio,
-        birthDate: new Date(birthDate as string).toISOString(),
-      },
+  return await gqlRequest(request, UpdateProfileMutation, {
+    input: {
+      userId,
+      name,
+      bio,
+      birthDate: new Date(birthDate as string).toISOString(),
     },
-    {
-      Authorization: `Bearer ${token}`,
-    }
-  );
-  return null;
+  });
 };
 
 export default function ProfileRoute() {

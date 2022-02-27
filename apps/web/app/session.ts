@@ -1,4 +1,6 @@
+import { RequestDocument } from 'graphql-request';
 import { createCookieSessionStorage, redirect } from 'remix';
+import { client } from './lib/graphql-client';
 
 // somewhere you've got a session storage
 const { getSession } = createCookieSessionStorage();
@@ -59,4 +61,19 @@ export async function createUserSession(
   } catch (error) {
     throw error;
   }
+}
+
+type Variables = {
+  [key: string]: any;
+};
+export async function gqlRequest<V = Variables>(
+  request: Request,
+  document: RequestDocument,
+  variables?: V
+) {
+  const session = await getUserSession(request);
+  const token = session.get('token');
+  return await client.request(document, variables, {
+    Authorization: `Bearer ${token}`,
+  });
 }
