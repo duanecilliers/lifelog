@@ -2,6 +2,7 @@ import type { MetaFunction, LoaderFunction } from 'remix';
 import { TextEditor } from '@lifelog/ui';
 import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
+import { format } from 'date-fns';
 
 type JournalData = {};
 
@@ -25,11 +26,12 @@ export let meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Journal() {
+  const title = format(Date.now(), 'MMMM Mo, yyyy');
   return (
     <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
-          Journal
+          {title}
         </h1>
       </header>
       <main>
