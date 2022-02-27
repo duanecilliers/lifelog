@@ -1,5 +1,5 @@
 import { RequestDocument } from 'graphql-request';
-import { createCookieSessionStorage, redirect } from 'remix';
+import { createCookieSessionStorage, redirect, SessionStorage } from 'remix';
 import { client } from './lib/graphql-client';
 
 // somewhere you've got a session storage
@@ -36,6 +36,15 @@ export async function userHasToken(request: Request) {
   const session = await getUserSession(request);
   console.log({ session }, session.has('token'));
   return session.has('token');
+}
+
+export async function signoutOfSession(request: Request) {
+  const session = await getUserSession(request);
+  return redirect('/login', {
+    headers: {
+      'Set-Cookie': await storage.destroySession(session),
+    },
+  });
 }
 
 export async function createUserSession(
