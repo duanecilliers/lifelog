@@ -148,11 +148,11 @@ const profileMenuItems = [
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const { hasToken } = useLoaderData();
+  const data = useLoaderData();
 
   return (
     <>
-      {hasToken && (
+      {data?.hasToken && (
         <Header
           className="fixed w-full"
           navigation={navigation}

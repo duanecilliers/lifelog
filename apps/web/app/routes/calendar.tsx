@@ -6,7 +6,7 @@ import { gqlRequest, requireUserSession } from '~/session';
 import { gql } from 'graphql-request';
 
 type CalendarData = {
-  age: number;
+  age: number | null;
 };
 
 /**
@@ -32,20 +32,20 @@ export let loader: LoaderFunction = async ({
 }): Promise<CalendarData> => {
   const session = await requireUserSession(request);
   const userId = session.get('userId');
-  const { profile } = await gqlRequest(request, ProfileQuery, { userId });
-  console.log({ profile });
 
-  const birthDate =
-    profile?.birthDate && new Date(parseInt(profile?.birthDate));
+  try {
+    const { profile } = await gqlRequest(request, ProfileQuery, { userId });
+    const birthDate =
+      profile?.birthDate && new Date(parseInt(profile?.birthDate));
+    const age = birthDate && differenceInYears(Date.now(), birthDate);
 
-  console.log({ birthDate });
-
-  const age = birthDate && differenceInYears(Date.now(), birthDate);
-  console.log({ age });
-
-  return {
-    age,
-  };
+    return {
+      age,
+    };
+  } catch (err) {
+    console.log({ err });
+    return { age: null };
+  }
 };
 
 // https://remix.run/api/conventions#meta
@@ -67,7 +67,19 @@ export default function Calendar() {
         </h1>
       </header>
       <div className="max-w-4xl mx-auto">
-        <LifeCalendar age={age} linkElement={Link} />
+        {age ? (
+          <LifeCalendar age={age} linkElement={Link} />
+        ) : (
+          <p className="text-center">
+            You haven't completed your profile yet. You can{' '}
+            <Link
+              className="text-blue-400"
+              to={`/profile?redirectTo=${encodeURIComponent('/calendar')}`}
+            >
+              update your profile here.
+            </Link>
+          </p>
+        )}
       </div>
     </>
   );

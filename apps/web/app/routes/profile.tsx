@@ -2,7 +2,14 @@ import { Button, TextField } from '@lifelog/ui';
 import { Profile } from '@prisma/client';
 import { format } from 'date-fns';
 import { gql } from 'graphql-request';
-import { ActionFunction, Form, LoaderFunction, MetaFunction } from 'remix';
+import {
+  ActionFunction,
+  Form,
+  LoaderFunction,
+  MetaFunction,
+  useParams,
+  useSearchParams,
+} from 'remix';
 import { useActionData, useLoaderData, redirect } from 'remix';
 import { client } from '~/lib/graphql-client';
 import { getUserSession, gqlRequest, requireUserSession } from '~/session';
@@ -28,7 +35,7 @@ const ProfileQuery = gql`
 `;
 
 interface LoaderData {
-  profile: Profile;
+  profile: Profile | null;
 }
 
 // Use this function to provide data for the route.
@@ -38,7 +45,14 @@ export const loader: LoaderFunction = async ({
 }): Promise<LoaderData> => {
   const session = await requireUserSession(request);
   const userId = session.get('userId');
-  const { profile } = await gqlRequest(request, ProfileQuery, { userId });
+  let profile = null;
+  try {
+    const data = await gqlRequest(request, ProfileQuery, { userId });
+    profile = data.profile;
+  } catch (err) {
+    console.log({ err });
+  }
+
   return {
     profile,
   };
@@ -59,15 +73,15 @@ export const action: ActionFunction = async (args) => {
   const session = await getUserSession(request);
   const userId = session.get('userId');
   const body = await request.formData();
+  const redirectTo = body.get('redirectTo') as string;
   const name = body.get('name');
   const birthDate = body.get('birthDate');
   const bio = body.get('bio');
 
-  console.log({ name, birthDate, bio });
   /** @todo validate with invariant */
   /** @todo server error handling */
 
-  return await gqlRequest(request, UpdateProfileMutation, {
+  await gqlRequest(request, UpdateProfileMutation, {
     input: {
       userId,
       name,
@@ -75,10 +89,15 @@ export const action: ActionFunction = async (args) => {
       birthDate: new Date(birthDate as string).toISOString(),
     },
   });
+
+  return redirect(redirectTo);
 };
 
 export default function ProfileRoute() {
   const { profile } = useLoaderData();
+  const [params] = useSearchParams();
+  const redirectTo = params.get('redirectTo') || '/';
+
   const { name, birthDate, bio } = {
     name: profile?.name,
     birthDate:
@@ -93,8 +112,9 @@ export default function ProfileRoute() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Profile
         </h2>
-        <Form reloadDocument method="post" className="mt-8 space-y-6">
+        <Form method="post" className="mt-8 space-y-6">
           <div>
+            <input type="hidden" name="redirectTo" value={redirectTo} />
             <TextField
               name="name"
               placeholder="Name"
