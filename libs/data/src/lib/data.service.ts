@@ -74,15 +74,16 @@ export class DataService extends PrismaClient {
     bio: string;
     userId: number;
   }) {
-    const { userId } = profile;
+    const { userId, ...updateRest } = profile;
     const _profile = await this.profile.findFirst({ where: { userId } });
-    if (_profile) {
+
+    if (!_profile) {
       return await this.profile.create({ data: profile });
     }
 
     return await this.profile.update({
       where: { userId },
-      data: profile,
+      data: updateRest,
     });
   }
 }
