@@ -25,10 +25,5 @@ export const loader: LoaderFunction = async () => {
 export default function AgeView() {
   const data = useLoaderData();
   const { age } = useParams();
-  return (
-    <div className="p-2 w-screen h-screen flex flex-col items-stretch">
-      <h1 className="text-lg font-bold mb-1">Weeks in: {age}</h1>
-      <WeekCalendar year="2022" linkElement={Link} />
-    </div>
-  );
+  return <WeekCalendar year="2022" linkElement={Link} />;
 }

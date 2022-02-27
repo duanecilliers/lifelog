@@ -4,21 +4,16 @@ import { differenceInYears } from 'date-fns';
 import { LifeCalendar } from '@lifelog/ui';
 import { requireUserSession } from '~/session';
 
-type IndexData = {};
+type SettingsData = {};
 
 // Loaders provide data to components and are only ever called on the server, so
 // you can connect to a database or run any server side code you want right next
 // to the component that renders it.
 // https://remix.run/api/conventions#loader
-export let loader: LoaderFunction = async ({ request }): Promise<IndexData> => {
-  await requireUserSession(request);
-  const dateOfBirth = new Date('1990-10-10');
-  const age = differenceInYears(Date.now(), dateOfBirth);
-  console.log({ age });
-
-  return {
-    age,
-  };
+export let loader: LoaderFunction = async ({
+  request,
+}): Promise<SettingsData> => {
+  return await requireUserSession(request);
 };
 
 // https://remix.run/api/conventions#meta
@@ -30,12 +25,12 @@ export let meta: MetaFunction = () => {
 };
 
 // https://remix.run/guides/routing#index-routes
-export default function Index() {
+export default function Settings() {
   return (
     <>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
-          Dashboard
+          Settings
         </h1>
       </header>
       <main>

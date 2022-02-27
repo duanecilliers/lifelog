@@ -12,6 +12,7 @@ function classNames(...classes) {
 
 export interface HeaderProps {
   linkElement?: ElementType;
+  className?: string;
   navigation: Array<{
     name: string;
     href: string;
@@ -27,9 +28,10 @@ export function Header({
   navigation,
   profileMenuItems,
   linkElement,
+  className = '',
 }: HeaderProps) {
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className={`bg-gray-800 ${className}`}>
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">

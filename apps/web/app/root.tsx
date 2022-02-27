@@ -141,13 +141,16 @@ const profileMenuItems = [
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="h-screen w-screen">
+    <>
       <Header
+        className="fixed w-full"
         navigation={navigation}
         profileMenuItems={profileMenuItems}
         linkElement={Link}
       />
-      {children}
-    </div>
+      <div className="max-w-7xl mx-auto h-full" style={{ paddingTop: '64px' }}>
+        {children}
+      </div>
+    </>
   );
 }
