@@ -13,6 +13,7 @@ import type { LinksFunction } from 'remix';
 import globalStylesUrl from '~/styles/global.css';
 import darkStylesUrl from '~/styles/dark.css';
 import appStyles from '~/styles/app.css';
+import { Header } from '@lifelog/ui';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -126,7 +127,27 @@ function Document({
   );
 }
 
+const navigation = [
+  { name: 'Dashboard', href: '/', current: true },
+  { name: 'Calendar', href: '/calendar', current: false },
+  { name: 'Journal', href: '/journal', current: false },
+];
+
+const profileMenuItems = [
+  { name: 'Your Profile', href: '/profile' },
+  { name: 'Settings', href: '/settings' },
+  { name: 'Sign out', href: '/signout' },
+];
+
 function Layout({ children }: { children: React.ReactNode }) {
-  // return <div className="min-h-full min-w-full">{children}</div>;
-  return children;
+  return (
+    <div className="h-screen w-screen">
+      <Header
+        navigation={navigation}
+        profileMenuItems={profileMenuItems}
+        linkElement={Link}
+      />
+      {children}
+    </div>
+  );
 }
