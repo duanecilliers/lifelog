@@ -1,14 +1,17 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react';
+import { ElementType, Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import Link from './header-link';
 import { Logo } from './logo';
+import { link } from 'fs';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export interface HeaderProps {
+  linkElement?: ElementType;
   navigation: Array<{
     name: string;
     href: string;
@@ -20,7 +23,11 @@ export interface HeaderProps {
   }>;
 }
 
-export function Header({ navigation, profileMenuItems }: HeaderProps) {
+export function Header({
+  navigation,
+  profileMenuItems,
+  linkElement,
+}: HeaderProps) {
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -45,21 +52,26 @@ export function Header({ navigation, profileMenuItems }: HeaderProps) {
                 </div>
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
-                    ))}
+                    {navigation.map((item) => {
+                      const linkProps = linkElement
+                        ? { to: item.href, as: linkElement }
+                        : { href: item.href };
+                      return (
+                        <Link
+                          key={item.name}
+                          className={classNames(
+                            item.current
+                              ? 'bg-gray-900 text-white'
+                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                          )}
+                          aria-current={item.current ? 'page' : undefined}
+                          {...linkProps}
+                        >
+                          {item.name}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -94,21 +106,26 @@ export function Header({ navigation, profileMenuItems }: HeaderProps) {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {profileMenuItems.map((item, i) => (
-                        <Menu.Item key={`header-profile-item-${i}`}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
+                      {profileMenuItems.map((item, i) => {
+                        const linkProps = linkElement
+                          ? { to: item.href, as: linkElement }
+                          : { href: item.href };
+                        return (
+                          <Menu.Item key={`header-profile-item-${i}`}>
+                            {({ active }) => (
+                              <Link
+                                className={classNames(
+                                  active ? 'bg-gray-100' : '',
+                                  'block px-4 py-2 text-sm text-gray-700'
+                                )}
+                                {...linkProps}
+                              >
+                                {item.name}
+                              </Link>
+                            )}
+                          </Menu.Item>
+                        );
+                      })}
                     </Menu.Items>
                   </Transition>
                 </Menu>
