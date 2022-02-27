@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createEditor, BaseEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact, ReactEditor } from 'slate-react';
 
@@ -15,16 +15,32 @@ declare module 'slate' {
 
 /* eslint-disable-next-line */
 export interface TextEditorProps {
+  initialValue?: Descendant[];
   className?: string;
-  initialValue: Descendant[];
+  focus?: boolean;
 }
 
-export function TextEditor({ className, initialValue }: TextEditorProps) {
+export function TextEditor({
+  className,
+  initialValue = [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ],
+  focus = false,
+}: TextEditorProps) {
   const editor = useMemo(() => {
     return withReact(createEditor());
   }, []);
 
   const [value, setValue] = useState<Descendant[]>(initialValue);
+
+  useEffect(() => {
+    if (focus) {
+      ReactEditor.focus(editor);
+    }
+  }, [editor, focus]);
 
   return (
     <div className={className}>

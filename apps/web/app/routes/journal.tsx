@@ -26,7 +26,7 @@ export let meta: MetaFunction = () => {
 
 // https://remix.run/guides/routing#index-routes
 export default function Journal() {
-  const title = format(Date.now(), 'MMMM Mo, yyyy');
+  const title = format(Date.now(), 'MMMM do, yyyy');
   return (
     <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -37,13 +37,14 @@ export default function Journal() {
       <main>
         <div className="py-6 sm:px-6 lg:px-8">
           <TextEditor
-            className="form-input px-4 py-3 border-2 border-gray-100 hover:border-gray-200 transition-all"
-            initialValue={[
-              {
-                type: 'paragraph',
-                children: [{ text: '' }],
-              },
-            ]}
+            focus={true}
+            className="form-input px-4 py-3 border-4 border-dashed border-gray-200 transition-all"
+            // initialValue={[
+            //   {
+            //     type: 'paragraph',
+            //     children: [{ text: '' }],
+            //   },
+            // ]}
           />
         </div>
       </main>
