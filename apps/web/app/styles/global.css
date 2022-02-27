@@ -17,3 +17,13 @@ body {
   width: 100%;
   height: 100vh;
 }
+
+pre {
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+pre:hover,
+pre:focus {
+  width: min-content;
+}
