@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaClient, Profile } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -65,7 +65,12 @@ export class DataService extends PrismaClient {
   }
 
   public async findProfileByUserId(userId: number) {
-    return await this.profile.findFirst({ where: { userId } });
+    const profile = await this.profile.findFirst({ where: { userId } });
+    if (!profile) {
+      throw new NotFoundException({ message: 'Profile not found' });
+    }
+
+    return profile;
   }
 
   public async updateProfile(profile: {
