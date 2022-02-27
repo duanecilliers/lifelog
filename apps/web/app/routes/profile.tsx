@@ -96,7 +96,7 @@ export const action: ActionFunction = async (args) => {
 export default function ProfileRoute() {
   const { profile } = useLoaderData();
   const [params] = useSearchParams();
-  const redirectTo = params.get('redirectTo') || '/';
+  const redirectTo = params.get('redirectTo') || '/profile';
 
   const { name, birthDate, bio } = {
     name: profile?.name,
