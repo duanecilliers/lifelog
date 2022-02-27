@@ -49,6 +49,8 @@
     "regenerator-runtime": "0.13.7",
     "remix": "^1.0.6",
     "rxjs": "^7.0.0",
+    "slate": "^0.73.0",
+    "slate-react": "^0.73.0",
     "tailwindcss": "^3.0.23",
     "tslib": "^2.0.0"
   },
@@ -89,6 +91,8 @@
     "@types/ramda": "^0.28.0",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.9",
+    "@types/slate": "^0.47.11",
+    "@types/slate-react": "^0.50.1",
     "@typescript-eslint/eslint-plugin": "~5.10.0",
     "@typescript-eslint/parser": "~5.10.0",
     "autoprefixer": "^10.4.2",
