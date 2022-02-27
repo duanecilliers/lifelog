@@ -16,7 +16,6 @@ export interface HeaderProps {
   navigation: Array<{
     name: string;
     href: string;
-    current: boolean;
   }>;
   profileMenuItems: Array<{
     name: string;
@@ -56,20 +55,24 @@ export function Header({
                   <div className="flex space-x-4">
                     {navigation.map((item) => {
                       const linkProps = linkElement
-                        ? { to: item.href, as: linkElement }
-                        : { href: item.href };
+                        ? {
+                            to: item.href,
+                            as: linkElement,
+                            className: ({ isActive }) =>
+                              classNames(
+                                isActive
+                                  ? 'bg-gray-900 text-white'
+                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                'px-3 py-2 rounded-md text-sm font-medium'
+                              ),
+                          }
+                        : {
+                            href: item.href,
+                            className:
+                              'px-3 py-2 rounded-md text-sm font-medium',
+                          };
                       return (
-                        <Link
-                          key={item.name}
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'px-3 py-2 rounded-md text-sm font-medium'
-                          )}
-                          aria-current={item.current ? 'page' : undefined}
-                          {...linkProps}
-                        >
+                        <Link key={item.name} {...linkProps}>
                           {item.name}
                         </Link>
                       );
@@ -137,18 +140,20 @@ export function Header({
 
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">
+              {/** @todo fix activate state */}
               {navigation.map((item) => (
                 <Disclosure.Button
                   key={item.name}
                   as="a"
                   href={item.href}
-                  className={classNames(
-                    item.current
-                      ? 'bg-gray-900 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block px-3 py-2 rounded-md text-base font-medium'
-                  )}
-                  aria-current={item.current ? 'page' : undefined}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  // className={classNames(
+                  //   item.current
+                  //     ? 'bg-gray-900 text-white'
+                  //     : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                  //   'block px-3 py-2 rounded-md text-base font-medium'
+                  // )}
+                  // aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
                 </Disclosure.Button>

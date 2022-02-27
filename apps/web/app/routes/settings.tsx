@@ -1,7 +1,4 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
-import { useLoaderData, json, Link } from 'remix';
-import { differenceInYears } from 'date-fns';
-import { LifeCalendar } from '@lifelog/ui';
 import { requireUserSession } from '~/session';
 
 type SettingsData = {};

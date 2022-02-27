@@ -1,8 +1,8 @@
 import {
-  Link,
   Links,
   LiveReload,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -146,7 +146,7 @@ function Layout({ children }: { children: React.ReactNode }) {
         className="fixed w-full"
         navigation={navigation}
         profileMenuItems={profileMenuItems}
-        linkElement={Link}
+        linkElement={NavLink}
       />
       <div className="max-w-7xl mx-auto h-full" style={{ paddingTop: '64px' }}>
         {children}

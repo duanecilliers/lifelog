@@ -11,9 +11,9 @@ const Template: Story = ({ ...args }: HeaderProps) => <Header {...args} />;
 export const Primary = Template.bind({});
 Primary.args = {
   navigation: [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Calendar', href: '#', current: false },
-    { name: 'Journal', href: '#', current: false },
+    { name: 'Dashboard', href: '#' },
+    { name: 'Calendar', href: '#' },
+    { name: 'Journal', href: '#' },
   ],
   profileMenuItems: [
     { name: 'Your Profile', href: '#' },
