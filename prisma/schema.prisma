@@ -33,3 +33,10 @@ model User {
   password String
   profile  Profile?
 }
+
+model JournalEntry {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  date    DateTime
+  json    Json
+}
