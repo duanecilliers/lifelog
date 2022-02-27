@@ -1,12 +1,14 @@
 import {
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from 'remix';
 import type { LinksFunction } from 'remix';
 
@@ -14,6 +16,7 @@ import globalStylesUrl from '~/styles/global.css';
 import darkStylesUrl from '~/styles/dark.css';
 import appStyles from '~/styles/app.css';
 import { Header } from '@lifelog/ui';
+import { userHasToken } from './session';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -101,6 +104,11 @@ export function CatchBoundary() {
   );
 }
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const hasToken = await userHasToken(request);
+  return { hasToken };
+};
+
 function Document({
   children,
   title,
@@ -140,14 +148,18 @@ const profileMenuItems = [
 ];
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const { hasToken } = useLoaderData();
+
   return (
     <>
-      <Header
-        className="fixed w-full"
-        navigation={navigation}
-        profileMenuItems={profileMenuItems}
-        linkElement={NavLink}
-      />
+      {hasToken && (
+        <Header
+          className="fixed w-full"
+          navigation={navigation}
+          profileMenuItems={profileMenuItems}
+          linkElement={NavLink}
+        />
+      )}
       <div className="max-w-7xl mx-auto h-full" style={{ paddingTop: '64px' }}>
         {children}
       </div>
