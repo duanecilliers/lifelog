@@ -21,6 +21,10 @@ import MainLayout from './layouts/main-layout';
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/icon?family=Material+Icons',
+    },
     { rel: 'stylesheet', href: globalStylesUrl },
     {
       rel: 'stylesheet',

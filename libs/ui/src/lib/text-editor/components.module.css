@@ -1,0 +1,23 @@
+.icon {
+  font-size: 18px;
+  vertical-align: text-bottom;
+}
+
+.button {
+  cursor: pointer;
+}
+
+.menu > * {
+  display: inline-block;
+}
+.menu > * + * {
+  margin-left: 15px;
+}
+
+.toolbar {
+  position: relative;
+  padding: 1px 18px 17px;
+  margin: 0 -20px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 20px;
+}

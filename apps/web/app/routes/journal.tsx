@@ -1,5 +1,5 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
-import { TextEditor } from '@lifelog/ui';
+import { TextEditor, BlockButton, MarkButton } from '@lifelog/ui';
 import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
 import { format } from 'date-fns';
@@ -39,6 +39,23 @@ export default function Journal() {
           <TextEditor
             focus={true}
             className="form-input px-4 py-3 border-4 border-dashed border-gray-200 transition-all"
+            Controls={[
+              <MarkButton format="bold" icon="format_bold" />,
+              <MarkButton format="italic" icon="format_italic" />,
+              <MarkButton format="underline" icon="format_underlined" />,
+              <MarkButton format="code" icon="code" />,
+              <BlockButton format="heading-one" icon="looks_one" />,
+              <BlockButton format="heading-two" icon="looks_two" />,
+              <BlockButton format="block-quote" icon="format_quote" />,
+              <BlockButton
+                format="numbered-list"
+                icon="format_list_numbered"
+              />,
+              <BlockButton
+                format="bulleted-list"
+                icon="format_list_bulleted"
+              />,
+            ]}
             // initialValue={[
             //   {
             //     type: 'paragraph',
