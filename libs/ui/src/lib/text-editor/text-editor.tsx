@@ -16,16 +16,10 @@ declare module 'slate' {
 /* eslint-disable-next-line */
 export interface TextEditorProps {
   className?: string;
+  initialValue: Descendant[];
 }
 
-export function TextEditor({ className }: TextEditorProps) {
-  const initialValue: Descendant[] = [
-    {
-      type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
-    },
-  ];
-
+export function TextEditor({ className, initialValue }: TextEditorProps) {
   const editor = useMemo(() => {
     return withReact(createEditor());
   }, []);

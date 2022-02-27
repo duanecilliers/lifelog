@@ -1,4 +1,5 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
+import { TextEditor } from '@lifelog/ui';
 import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
 
@@ -32,12 +33,16 @@ export default function Journal() {
         </h1>
       </header>
       <main>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          {/* Replace with your content */}
-          <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
-          </div>
-          {/* /End replace */}
+        <div className="py-6 sm:px-6 lg:px-8">
+          <TextEditor
+            className="form-input px-4 py-3 border-2 border-gray-100 hover:border-gray-200 transition-all"
+            initialValue={[
+              {
+                type: 'paragraph',
+                children: [{ text: '' }],
+              },
+            ]}
+          />
         </div>
       </main>
     </MainLayout>

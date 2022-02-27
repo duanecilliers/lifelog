@@ -11,4 +11,11 @@ const Template: Story = ({ ...args }: TextEditorProps) => (
 );
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  initialValue: [
+    {
+      type: 'paragraph',
+      children: [{ text: 'A line of text in a paragraph.' }],
+    },
+  ],
+};
