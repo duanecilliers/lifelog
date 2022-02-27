@@ -10,6 +10,7 @@ import { gql } from 'graphql-request';
 import { TextField, Button } from '@lifelog/ui';
 import { client } from '~/lib/graphql-client';
 import { createUserSession, userHasToken } from '~/session';
+import MainLayout from '~/layouts/main-layout';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -59,39 +60,41 @@ export const action: ActionFunction = async (args) => {
 
 export default function SignupRoute() {
   return (
-    <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Start your 14-day free trial
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
-          <Link
-            to="/login"
-            className="font-medium text-blue-600 hover:text-blue-500"
-          >
-            login to your account
-          </Link>
-        </p>
-        <Form method="post" className="mt-8 space-y-6">
-          <div>
-            <TextField name="email" placeholder="Email" fullWidth={true} />
-          </div>
-          <div>
-            <TextField
-              type="password"
-              name="password"
-              placeholder="Password"
-              fullWidth={true}
-            />
-          </div>
-          <div>
-            <Button type="submit" fullWidth={true} variant="contained">
-              Login
-            </Button>
-          </div>
-        </Form>
+    <MainLayout showHeader={false}>
+      <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Start your 14-day free trial
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link
+              to="/login"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
+              login to your account
+            </Link>
+          </p>
+          <Form method="post" className="mt-8 space-y-6">
+            <div>
+              <TextField name="email" placeholder="Email" fullWidth={true} />
+            </div>
+            <div>
+              <TextField
+                type="password"
+                name="password"
+                placeholder="Password"
+                fullWidth={true}
+              />
+            </div>
+            <div>
+              <Button type="submit" fullWidth={true} variant="contained">
+                Login
+              </Button>
+            </div>
+          </Form>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }

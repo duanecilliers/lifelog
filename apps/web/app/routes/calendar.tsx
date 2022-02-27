@@ -4,6 +4,7 @@ import { differenceInYears } from 'date-fns';
 import { LifeCalendar } from '@lifelog/ui';
 import { gqlRequest, requireUserSession } from '~/session';
 import { gql } from 'graphql-request';
+import MainLayout from '~/layouts/main-layout';
 
 type CalendarData = {
   age: number | null;
@@ -60,7 +61,7 @@ export let meta: MetaFunction = () => {
 export default function Calendar() {
   let { age } = useLoaderData<CalendarData>();
   return (
-    <>
+    <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Life Calendar
@@ -81,6 +82,6 @@ export default function Calendar() {
           </p>
         )}
       </div>
-    </>
+    </MainLayout>
   );
 }

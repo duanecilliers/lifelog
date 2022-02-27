@@ -1,4 +1,5 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
+import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
 
 type SettingsData = {};
@@ -24,7 +25,7 @@ export let meta: MetaFunction = () => {
 // https://remix.run/guides/routing#index-routes
 export default function Settings() {
   return (
-    <>
+    <MainLayout showHeader={true}>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Settings
@@ -39,6 +40,6 @@ export default function Settings() {
           {/* /End replace */}
         </div>
       </main>
-    </>
+    </MainLayout>
   );
 }

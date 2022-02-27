@@ -15,8 +15,8 @@ import type { LinksFunction } from 'remix';
 import globalStylesUrl from '~/styles/global.css';
 import darkStylesUrl from '~/styles/dark.css';
 import appStyles from '~/styles/app.css';
-import { Header } from '@lifelog/ui';
 import { userHasToken } from './session';
+import MainLayout from './layouts/main-layout';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -39,9 +39,7 @@ export let links: LinksFunction = () => {
 export default function App() {
   return (
     <Document>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <Outlet />
     </Document>
   );
 }
@@ -51,7 +49,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
   console.error(error);
   return (
     <Document title="Error!">
-      <Layout>
+      <MainLayout>
         <div className="w-full">
           <h1>There was an error</h1>
           <pre className="border border-red-700 bg-red-200 text-red-700 break-words">
@@ -63,7 +61,7 @@ export function ErrorBoundary({ error }: { error: Error }) {
             users to see.
           </p>
         </div>
-      </Layout>
+      </MainLayout>
     </Document>
   );
 }
@@ -94,12 +92,12 @@ export function CatchBoundary() {
 
   return (
     <Document title={`${caught.status} ${caught.statusText}`}>
-      <Layout>
+      <MainLayout>
         <h1>
           {caught.status}: {caught.statusText}
         </h1>
         {message}
-      </Layout>
+      </MainLayout>
     </Document>
   );
 }
@@ -132,37 +130,5 @@ function Document({
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
-  );
-}
-
-const navigation = [
-  { name: 'Dashboard', href: '/', current: true },
-  { name: 'Calendar', href: '/calendar', current: false },
-  { name: 'Journal', href: '/journal', current: false },
-];
-
-const profileMenuItems = [
-  { name: 'Your Profile', href: '/profile' },
-  { name: 'Settings', href: '/settings' },
-  { name: 'Sign out', href: '/signout' },
-];
-
-function Layout({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData();
-
-  return (
-    <>
-      {data?.hasToken && (
-        <Header
-          className="fixed w-full"
-          navigation={navigation}
-          profileMenuItems={profileMenuItems}
-          linkElement={NavLink}
-        />
-      )}
-      <div className="max-w-7xl mx-auto h-full" style={{ paddingTop: '64px' }}>
-        {children}
-      </div>
-    </>
   );
 }

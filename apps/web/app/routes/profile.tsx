@@ -11,6 +11,7 @@ import {
   useSearchParams,
 } from 'remix';
 import { useActionData, useLoaderData, redirect } from 'remix';
+import MainLayout from '~/layouts/main-layout';
 import { client } from '~/lib/graphql-client';
 import { getUserSession, gqlRequest, requireUserSession } from '~/session';
 
@@ -107,46 +108,48 @@ export default function ProfileRoute() {
   };
 
   return (
-    <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Profile
-        </h2>
-        <Form method="post" className="mt-8 space-y-6">
-          <div>
-            <input type="hidden" name="redirectTo" value={redirectTo} />
-            <TextField
-              name="name"
-              placeholder="Name"
-              defaultValue={name}
-              fullWidth={true}
-            />
-          </div>
-          {/** @todo add date picker */}
-          <div>
-            <TextField
-              name="birthDate"
-              placeholder="Birth date: EG: 1990-10-10"
-              fullWidth={true}
-              defaultValue={birthDate}
-            />
-          </div>
-          <div>
-            {/** @todo create textarea component */}
-            <TextField
-              name="bio"
-              placeholder="Bio"
-              defaultValue={bio}
-              fullWidth={true}
-            />
-          </div>
-          <div>
-            <Button type="submit" fullWidth={true} variant="contained">
-              Submit
-            </Button>
-          </div>
-        </Form>
+    <MainLayout>
+      <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Profile
+          </h2>
+          <Form method="post" className="mt-8 space-y-6">
+            <div>
+              <input type="hidden" name="redirectTo" value={redirectTo} />
+              <TextField
+                name="name"
+                placeholder="Name"
+                defaultValue={name}
+                fullWidth={true}
+              />
+            </div>
+            {/** @todo add date picker */}
+            <div>
+              <TextField
+                name="birthDate"
+                placeholder="Birth date: EG: 1990-10-10"
+                fullWidth={true}
+                defaultValue={birthDate}
+              />
+            </div>
+            <div>
+              {/** @todo create textarea component */}
+              <TextField
+                name="bio"
+                placeholder="Bio"
+                defaultValue={bio}
+                fullWidth={true}
+              />
+            </div>
+            <div>
+              <Button type="submit" fullWidth={true} variant="contained">
+                Submit
+              </Button>
+            </div>
+          </Form>
+        </div>
       </div>
-    </div>
+    </MainLayout>
   );
 }

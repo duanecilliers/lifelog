@@ -1,4 +1,5 @@
 import { MetaFunction, LoaderFunction, Outlet } from 'remix';
+import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
 
 type LoaderData = {};
@@ -24,7 +25,7 @@ export let meta: MetaFunction = () => {
 // https://remix.run/guides/routing#index-routes
 export default function Age() {
   return (
-    <>
+    <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Week Calendar
@@ -35,6 +36,6 @@ export default function Age() {
           <Outlet />
         </div>
       </main>
-    </>
+    </MainLayout>
   );
 }

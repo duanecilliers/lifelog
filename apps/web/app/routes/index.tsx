@@ -3,6 +3,7 @@ import { useLoaderData, json, Link } from 'remix';
 import { differenceInYears } from 'date-fns';
 import { LifeCalendar } from '@lifelog/ui';
 import { requireUserSession } from '~/session';
+import MainLayout from '~/layouts/main-layout';
 
 type IndexData = {};
 
@@ -32,7 +33,7 @@ export let meta: MetaFunction = () => {
 // https://remix.run/guides/routing#index-routes
 export default function Index() {
   return (
-    <>
+    <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Dashboard
@@ -47,6 +48,6 @@ export default function Index() {
           {/* /End replace */}
         </div>
       </main>
-    </>
+    </MainLayout>
   );
 }
