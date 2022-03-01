@@ -1,4 +1,5 @@
 import type { MetaFunction, LoaderFunction } from 'remix';
+import { Descendant, Node } from 'slate';
 import { TextEditor, BlockButton, MarkButton } from '@lifelog/ui';
 import MainLayout from '~/layouts/main-layout';
 import { requireUserSession } from '~/session';
@@ -24,9 +25,37 @@ export let meta: MetaFunction = () => {
   };
 };
 
+// Define a serializing function that takes a value and returns a string.
+const serialize = (value: Descendant[]) => {
+  return (
+    value
+      // Return the string content of each paragraph in the value's children.
+      .map((n) => Node.string(n))
+      // Join them all with line breaks denoting paragraphs.
+      .join('\n')
+  );
+};
+
+// Define a deserializing function that takes a string and returns a value.
+const deserialize = (string: string) => {
+  // Return a value array of children derived by splitting the string.
+  return string.split('\n').map((line) => {
+    return {
+      children: [{ text: line }],
+    };
+  });
+};
+
 // https://remix.run/guides/routing#index-routes
 export default function Journal() {
   const title = format(Date.now(), 'MMMM do, yyyy');
+
+  const handleChange = (value: Descendant[]) => {
+    console.log({ value });
+    // const serializedValue = serialize(value);
+    // console.log({ serializedValue });
+  };
+
   return (
     <MainLayout>
       <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -38,6 +67,7 @@ export default function Journal() {
         <div className="py-6 sm:px-6 lg:px-8">
           <TextEditor
             focus={true}
+            onChange={handleChange}
             className="form-input px-4 py-3 border-4 border-dashed border-gray-200 transition-all"
             Controls={[
               <MarkButton format="bold" icon="format_bold" />,

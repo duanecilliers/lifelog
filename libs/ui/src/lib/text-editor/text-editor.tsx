@@ -28,6 +28,7 @@ export interface TextEditorProps {
   className?: string;
   focus?: boolean;
   Controls?: ReactNode[];
+  onChange: (value: Descendant[]) => void;
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -49,8 +50,18 @@ export function TextEditor({
     },
   ],
   focus = false,
+  onChange,
 }: TextEditorProps) {
   const [value, setValue] = useState<Descendant[]>(initialValue);
+  const handleChange = (values: Descendant[]): void => {
+    setValue(values);
+    const isAstChange = editor.operations.some(
+      (op) => 'set_selection' !== op.type
+    );
+    if (isAstChange) {
+      onChange(values);
+    }
+  };
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => {
@@ -65,7 +76,7 @@ export function TextEditor({
 
   return (
     <div className={className}>
-      <Slate editor={editor} value={value} onChange={setValue}>
+      <Slate editor={editor} value={value} onChange={handleChange}>
         {Controls.length > 0 && <Toolbar>{Controls}</Toolbar>}
         <Editable
           renderElement={renderElement}
