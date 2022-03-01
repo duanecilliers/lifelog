@@ -28,7 +28,10 @@ export interface TextEditorProps {
   className?: string;
   focus?: boolean;
   Controls?: ReactNode[];
-  onChange: (value: Descendant[]) => void;
+  autoSave?: boolean;
+  autoSaveDelay?: number;
+  onSave?: (value: Descendant[]) => void;
+  onChange?: (value: Descendant[]) => void;
 }
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -50,29 +53,73 @@ export function TextEditor({
     },
   ],
   focus = false,
+  autoSave = true,
+  autoSaveDelay = 10,
+  onSave,
   onChange,
 }: TextEditorProps) {
   const [value, setValue] = useState<Descendant[]>(initialValue);
-  const handleChange = (values: Descendant[]): void => {
-    setValue(values);
-    const isAstChange = editor.operations.some(
-      (op) => 'set_selection' !== op.type
-    );
-    if (isAstChange) {
-      onChange(values);
-    }
-  };
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => {
     return withReact(createEditor());
   }, []);
 
+  const handleChange = (values: Descendant[]): void => {
+    setValue(values);
+    if (onChange) {
+      const isAstChange = editor.operations.some(
+        (op) => 'set_selection' !== op.type
+      );
+      if (isAstChange) {
+        onChange(values);
+      }
+    }
+  };
+
+  const handleSave = useCallback(() => {
+    if (onSave) {
+      const isAstChange = editor.operations.some(
+        (op) => 'set_selection' !== op.type
+      );
+      if (isAstChange) {
+        onSave(value);
+      }
+      onSave(value);
+    }
+  }, [onSave, value, editor.operations]);
+
   useEffect(() => {
     if (focus) {
       ReactEditor.focus(editor);
     }
   }, [editor, focus]);
+
+  /**
+   * Save entry every 10 seconds
+   */
+  useEffect(
+    () => {
+      const timer1 = setTimeout(() => {
+        if (autoSave) {
+          handleSave();
+        }
+      }, autoSaveDelay * 1000);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    // useEffect will run only one time with empty []
+    // if you pass a value to array,
+    // like this - [data]
+    // than clearTimeout will run every time
+    // this value changes (useEffect re-run)
+    [handleSave, autoSaveDelay, autoSave]
+  );
 
   return (
     <div className={className}>
@@ -81,6 +128,7 @@ export function TextEditor({
         <Editable
           renderElement={renderElement}
           renderLeaf={renderLeaf}
+          onBlur={handleSave}
           onKeyDown={(event) => {
             for (const hotkey in HOTKEYS) {
               if (isHotkey(hotkey, event as any)) {
