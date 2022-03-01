@@ -2,9 +2,9 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { JournalEntry } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry.model';
-import { JournalEntryUpdateInput } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry-update.input';
 import { PrismaClient } from '@prisma/client';
 import { JournalEntryCreateInput } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry-create.input';
+import { JournalEntryUpdateInput } from './dto/journal-entry-update.input';
 
 @Resolver(() => JournalEntry)
 export class JournalsResolver extends PrismaClient {
@@ -32,5 +32,17 @@ export class JournalsResolver extends PrismaClient {
     @Args('journalEntry') journalEntry: JournalEntryCreateInput
   ) {
     return this.journalEntry.create({ data: journalEntry });
+  }
+
+  @Mutation(() => JournalEntry)
+  @UseGuards(JwtAuthGuard)
+  updateJournalEntry(
+    @Args('updateJournalEntry')
+    updateJournalEntry: JournalEntryUpdateInput
+  ) {
+    return this.journalEntry.update({
+      data: updateJournalEntry,
+      where: { id: updateJournalEntry.id as number },
+    });
   }
 }

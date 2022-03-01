@@ -1,9 +1,17 @@
-import type { MetaFunction, LoaderFunction } from 'remix';
+import {
+  MetaFunction,
+  LoaderFunction,
+  ActionFunction,
+  useSubmit,
+  redirect,
+  useActionData,
+} from 'remix';
 import { Descendant, Node } from 'slate';
 import { TextEditor, BlockButton, MarkButton } from '@lifelog/ui';
 import MainLayout from '~/layouts/main-layout';
-import { requireUserSession } from '~/session';
+import { getUserSession, gqlRequest, requireUserSession } from '~/session';
 import { format } from 'date-fns';
+import { gql } from 'graphql-request';
 
 type JournalData = {};
 
@@ -25,35 +33,73 @@ export let meta: MetaFunction = () => {
   };
 };
 
-// Define a serializing function that takes a value and returns a string.
-const serialize = (value: Descendant[]) => {
-  return (
-    value
-      // Return the string content of each paragraph in the value's children.
-      .map((n) => Node.string(n))
-      // Join them all with line breaks denoting paragraphs.
-      .join('\n')
-  );
-};
+const CreateJournalEntryMutation = gql`
+  mutation createJournalEntry($input: JournalEntryCreateInput!) {
+    createJournalEntry(journalEntry: $input) {
+      date
+      id
+      json
+      userId
+    }
+  }
+`;
 
-// Define a deserializing function that takes a string and returns a value.
-const deserialize = (string: string) => {
-  // Return a value array of children derived by splitting the string.
-  return string.split('\n').map((line) => {
-    return {
-      children: [{ text: line }],
-    };
-  });
+const UpdateJournalEntryMutation = gql`
+  mutation updateJournalEntry($input: JournalEntryUpdateInput!) {
+    updateJournalEntry(updateJournalEntry: $input) {
+      date
+      id
+      json
+      userId
+    }
+  }
+`;
+
+export const action: ActionFunction = async (args) => {
+  const { request } = args;
+  const session = await getUserSession(request);
+  const userId = session.get('userId');
+  const body = await request.formData();
+  const value = body.get('value') as string;
+  const journalEntryId = body.get('journalEntryId') as string;
+  console.log('journalEntryId', journalEntryId);
+
+  if (journalEntryId === 'undefined') {
+    console.log('creating new journal entry.....');
+    const data = await gqlRequest(request, CreateJournalEntryMutation, {
+      input: {
+        date: new Date().toISOString(),
+        json: JSON.parse(value),
+        userId,
+      },
+    });
+    const { id, date, json } = data?.createJournalEntry;
+    return { id, date, json, userId };
+  } else {
+    console.log('updating journal entry.........');
+    const data = await gqlRequest(request, UpdateJournalEntryMutation, {
+      input: {
+        id: parseInt(journalEntryId),
+        json: JSON.parse(value),
+      },
+    });
+    const { id, date, json } = data?.updateJournalEntry;
+    return { id, date, json, userId };
+  }
 };
 
 // https://remix.run/guides/routing#index-routes
 export default function Journal() {
+  const submit = useSubmit();
   const title = format(Date.now(), 'MMMM do, yyyy');
+  const data = useActionData();
+  const journalEntryId = data?.id;
 
-  const handleChange = (value: Descendant[]) => {
-    console.log({ value });
-    // const serializedValue = serialize(value);
-    // console.log({ serializedValue });
+  const handleSave = (value: Descendant[]) => {
+    submit(
+      { value: JSON.stringify(value), data, journalEntryId },
+      { method: 'post', replace: true }
+    );
   };
 
   return (
@@ -67,8 +113,8 @@ export default function Journal() {
         <div className="py-6 sm:px-6 lg:px-8">
           <TextEditor
             focus={true}
-            onChange={handleChange}
             className="form-input px-4 py-3 border-4 border-dashed border-gray-200 transition-all"
+            onSave={handleSave}
             Controls={[
               <MarkButton format="bold" icon="format_bold" />,
               <MarkButton format="italic" icon="format_italic" />,
