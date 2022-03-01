@@ -1,29 +1,36 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { DataService } from '@lifelog/data';
+import { JournalEntry } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry.model';
+import { JournalEntryUpdateInput } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry-update.input';
+import { PrismaClient } from '@prisma/client';
+import { JournalEntryCreateInput } from '../@generated/prisma-nestjs-graphql/journal-entry/journal-entry-create.input';
 
-@Resolver(() => Journal)
-export class JournalsResolver {
-  constructor(private readonly dataService: DataService) {}
+@Resolver(() => JournalEntry)
+export class JournalsResolver extends PrismaClient {
+  constructor() {
+    super();
+  }
 
   /** @todo add another guard for user roles */
-  @Query(() => [Journal], { name: 'profiles' })
+  @Query(() => [JournalEntry], { name: 'journalEntries' })
   @UseGuards(JwtAuthGuard)
   findAll() {
-    return this.dataService.allJournals();
+    return this.journalEntry.findMany();
   }
 
   /** @todo add another guard for user roles */
-  @Query(() => Journal, { name: 'profile' })
-  @UseGuards(JwtAuthGuard)
-  findOne(@Args('userId') userId: number) {
-    return this.dataService.findJournalByUserId(userId);
-  }
+  // @Query(() => JournalEntry, { name: 'journalEntry' })
+  // @UseGuards(JwtAuthGuard)
+  // findOne(@Args('id') id: number) {
+  //   // return this.dataService.findJournalByUserId(userId);
+  // }
 
-  @Mutation(() => Journal)
+  @Mutation(() => JournalEntry)
   @UseGuards(JwtAuthGuard)
-  updateJournal(@Args('profile') profile: UpdateJournalInput) {
-    return this.dataService.updateJournal(profile);
+  createJournalEntry(
+    @Args('journalEntry') journalEntry: JournalEntryCreateInput
+  ) {
+    return this.journalEntry.create({ data: journalEntry });
   }
 }
