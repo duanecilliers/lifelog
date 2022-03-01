@@ -11,6 +11,7 @@ import { DataModule } from '@lifelog/data';
 import { ConfigModule } from '@nestjs/config';
 import { configuration } from './config';
 import { validationSchema } from './validation';
+import { JournalModule } from '../journal/journal.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { validationSchema } from './validation';
     UsersModule,
     AuthModule,
     DataModule,
+    JournalModule,
   ],
   controllers: [AppController],
   providers: [AppService],
