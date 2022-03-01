@@ -1,5 +1,6 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import isHotkey from 'is-hotkey';
+import { equals } from 'ramda';
 import {
   createEditor,
   BaseEditor,
@@ -43,15 +44,17 @@ const HOTKEYS = {
   'mod+`': 'code',
 };
 
+const defaultInitialValue: Descendant[] = [
+  {
+    type: 'paragraph',
+    children: [{ text: '' }],
+  },
+];
+
 export function TextEditor({
   className,
   Controls = [],
-  initialValue = [
-    {
-      type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ],
+  initialValue = defaultInitialValue,
   focus = false,
   autoSave = true,
   autoSaveDelay = 10,
@@ -78,7 +81,7 @@ export function TextEditor({
   };
 
   const handleSave = useCallback(() => {
-    if (onSave) {
+    if (onSave && !equals(initialValue, value)) {
       const isAstChange = editor.operations.some(
         (op) => 'set_selection' !== op.type
       );
@@ -87,7 +90,7 @@ export function TextEditor({
       }
       onSave(value);
     }
-  }, [onSave, value, editor.operations]);
+  }, [onSave, value, editor.operations, initialValue]);
 
   useEffect(() => {
     if (focus) {
