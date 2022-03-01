@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 const SignupMutation = gql`
-  mutation signup($input: LoginUserInput!) {
+  mutation signup($input: UserCreateInput!) {
     signup(loginUserInput: $input) {
       user {
         id

@@ -2,19 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type LoginResponse {
   access_token: String!
   user: User!
 }
 
-input LoginUserInput {
-  email: String!
-  password: String!
-}
-
 type Mutation {
-  login(loginUserInput: LoginUserInput!): LoginResponse!
-  signup(loginUserInput: LoginUserInput!): LoginResponse!
+  login(loginUserInput: UserCreateInput!): LoginResponse!
+  signup(loginUserInput: UserCreateInput!): LoginResponse!
   updateProfile(profile: UpdateProfileInput!): Profile!
 }
 
@@ -25,6 +25,28 @@ type Profile {
   name: String!
   user: User!
   userId: Int!
+}
+
+input ProfileCreateNestedOneWithoutUserInput {
+  connect: ProfileWhereUniqueInput
+  connectOrCreate: ProfileCreateOrConnectWithoutUserInput
+  create: ProfileCreateWithoutUserInput
+}
+
+input ProfileCreateOrConnectWithoutUserInput {
+  create: ProfileCreateWithoutUserInput!
+  where: ProfileWhereUniqueInput!
+}
+
+input ProfileCreateWithoutUserInput {
+  bio: String
+  birthDate: DateTime!
+  name: String
+}
+
+input ProfileWhereUniqueInput {
+  id: Int
+  userId: Int
 }
 
 type Query {
@@ -45,4 +67,10 @@ type User {
   email: String!
   id: Int!
   profile: Profile!
+}
+
+input UserCreateInput {
+  email: String!
+  password: String!
+  profile: ProfileCreateNestedOneWithoutUserInput
 }
