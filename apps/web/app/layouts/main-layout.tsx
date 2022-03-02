@@ -1,10 +1,12 @@
 import { Header } from '@lifelog/ui';
+import { format } from 'date-fns';
 import { NavLink } from 'remix';
 
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
   { name: 'Calendar', href: '/calendar', current: false },
-  { name: 'Journal', href: '/journal', current: false },
+  { name: 'Journal', href: `/journal/${currentDate}`, current: false },
 ];
 
 const profileMenuItems = [
