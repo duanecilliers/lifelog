@@ -26,6 +26,7 @@ declare module 'slate' {
 /* eslint-disable-next-line */
 export interface TextEditorProps {
   initialValue?: Descendant[];
+  value?: Descendant[];
   className?: string;
   focus?: boolean;
   Controls?: ReactNode[];
@@ -55,21 +56,31 @@ export function TextEditor({
   className,
   Controls = [],
   initialValue = defaultInitialValue,
+  value,
   focus = false,
   autoSave = true,
   autoSaveDelay = 10,
   onSave,
   onChange,
 }: TextEditorProps) {
-  const [value, setValue] = useState<Descendant[]>(initialValue);
+  const [internalValue, setInternalValue] = useState<Descendant[]>(
+    value || initialValue
+  );
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => {
     return withReact(createEditor());
   }, []);
 
+  useEffect(() => {
+    if (value) {
+      editor.children = value;
+      setInternalValue(value);
+    }
+  }, [value, editor]);
+
   const handleChange = (values: Descendant[]): void => {
-    setValue(values);
+    setInternalValue(values);
     if (onChange) {
       const isAstChange = editor.operations.some(
         (op) => 'set_selection' !== op.type
@@ -81,16 +92,16 @@ export function TextEditor({
   };
 
   const handleSave = useCallback(() => {
-    if (onSave && !equals(initialValue, value)) {
+    if (onSave && !equals(initialValue, internalValue)) {
       const isAstChange = editor.operations.some(
         (op) => 'set_selection' !== op.type
       );
       if (isAstChange) {
-        onSave(value);
+        onSave(internalValue);
       }
-      onSave(value);
+      onSave(internalValue);
     }
-  }, [onSave, value, editor.operations, initialValue]);
+  }, [onSave, internalValue, editor.operations, initialValue]);
 
   useEffect(() => {
     if (focus) {
@@ -126,7 +137,7 @@ export function TextEditor({
 
   return (
     <div className={className}>
-      <Slate editor={editor} value={value} onChange={handleChange}>
+      <Slate editor={editor} value={internalValue} onChange={handleChange}>
         {Controls.length > 0 && <Toolbar>{Controls}</Toolbar>}
         <Editable
           renderElement={renderElement}

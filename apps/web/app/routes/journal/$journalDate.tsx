@@ -24,7 +24,7 @@ export const meta: MetaFunction = () => {
 
 interface LoaderData {
   journalEntry: any;
-  initialValue: Descendant[];
+  value: Descendant[];
 }
 
 const dateFormat = 'yyyy-MM-dd';
@@ -47,7 +47,7 @@ export const loader: LoaderFunction = async (args): Promise<LoaderData> => {
     );
   }
 
-  const initialValue = journalEntry?.json || [
+  const value = journalEntry?.json || [
     {
       type: 'paragraph',
       children: [{ text: '' }],
@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async (args): Promise<LoaderData> => {
 
   return {
     journalEntry,
-    initialValue,
+    value,
   };
 };
 
@@ -149,11 +149,7 @@ export default function JournalDate() {
     addDays(new Date(journalDate as string), 1),
     dateFormat
   );
-  const { journalEntry, initialValue } = useLoaderData();
-  console.log(
-    '🚀 ~ file: $journalDate.tsx ~ line 144 ~ JournalDate ~ journal',
-    journalEntry
-  );
+  const { journalEntry, value } = useLoaderData();
   const title = format(new Date(journalDate as string), 'MMMM do, yyyy');
   const data = useActionData();
   const journalEntryId = journalEntry?.id || data?.id;
@@ -206,7 +202,8 @@ export default function JournalDate() {
                 icon="format_list_bulleted"
               />,
             ]}
-            initialValue={initialValue}
+            initialValue={value}
+            value={value}
           />
         </div>
       </main>
