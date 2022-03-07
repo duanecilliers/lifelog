@@ -13,7 +13,7 @@ import { TextEditor, BlockButton, MarkButton } from '@lifelog/ui';
 import { gql } from 'graphql-request';
 import { getUserSession, gqlRequest } from '~/session';
 import { Descendant } from 'slate';
-import { addDays, format, subDays } from 'date-fns';
+import { addDays, format, isToday, subDays } from 'date-fns';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -175,9 +175,13 @@ export default function JournalDate() {
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           {title}
         </h1>
-        <Link to={`/journal/${nextDate}`} className="p-2">
-          <span className="material-icons">arrow_right</span>
-        </Link>
+        {!isToday(new Date(journalDate as string)) ? (
+          <Link to={`/journal/${nextDate}`} className="p-2">
+            <span className="material-icons">arrow_right</span>
+          </Link>
+        ) : (
+          <span>&nbsp;</span>
+        )}
       </header>
       <main>
         <div className="py-6 sm:px-6 lg:px-8">
