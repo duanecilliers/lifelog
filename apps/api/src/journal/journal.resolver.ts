@@ -26,6 +26,12 @@ export class JournalsResolver extends PrismaClient {
   //   // return this.dataService.findJournalByUserId(userId);
   // }
 
+  @Query(() => JournalEntry, { name: 'journalEntryByDay' })
+  @UseGuards(JwtAuthGuard)
+  findByDate(@Args('date') date: Date) {
+    return this.journalEntry.findFirst({ where: { date } });
+  }
+
   @Mutation(() => JournalEntry)
   @UseGuards(JwtAuthGuard)
   createJournalEntry(

@@ -90,6 +90,7 @@ input ProfileWhereUniqueInput {
 
 type Query {
   journalEntries: [JournalEntry!]!
+  journalEntryByDay(date: DateTime!): JournalEntry!
   profile(userId: Float!): Profile!
   profiles: [Profile!]!
   user(email: String!): User!

@@ -13,7 +13,7 @@ import { TextEditor, BlockButton, MarkButton } from '@lifelog/ui';
 import { gql } from 'graphql-request';
 import { getUserSession, gqlRequest } from '~/session';
 import { Descendant } from 'slate';
-import { format } from 'date-fns';
+import { addDays, format, subDays } from 'date-fns';
 
 // Provide meta tags for this page.
 // - https://remix.run/api/conventions#meta
@@ -22,11 +22,41 @@ export const meta: MetaFunction = () => {
   return { title: `Journal Entry | ${journalDate}` };
 };
 
+interface LoaderData {
+  journalEntry: any;
+  initialValue: Descendant[];
+}
+
+const dateFormat = 'yyyy-MM-dd';
+
 // Use this function to provide data for the route.
 // - https://remix.run/api/conventions#loader
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async (args): Promise<LoaderData> => {
+  const { request } = args;
+  const { journalDate = format(Date.now(), dateFormat) } = args.params;
+  let journalEntry = null;
+  try {
+    const _journal = await gqlRequest(request, GetJournalEntryByDate, {
+      date: format(new Date(journalDate), dateFormat),
+    });
+    journalEntry = _journal?.journalEntryByDay;
+  } catch (err) {
+    console.log(
+      '🚀 ~ file: $journalDate.tsx ~ line 40 ~ constloader:LoaderFunction= ~ err',
+      err
+    );
+  }
+
+  const initialValue = journalEntry?.json || [
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ];
+
   return {
-    message: 'Hello, world!',
+    journalEntry,
+    initialValue,
   };
 };
 
@@ -52,6 +82,17 @@ const UpdateJournalEntryMutation = gql`
   }
 `;
 
+const GetJournalEntryByDate = gql`
+  query journalEntryByDay($date: DateTime!) {
+    journalEntryByDay(date: $date) {
+      date
+      id
+      json
+      userId
+    }
+  }
+`;
+
 export const action: ActionFunction = async (args) => {
   const { request } = args;
   const session = await getUserSession(request);
@@ -59,13 +100,25 @@ export const action: ActionFunction = async (args) => {
   const body = await request.formData();
   const value = body.get('value') as string;
   const journalEntryId = body.get('journalEntryId') as string;
-  console.log('journalEntryId', journalEntryId);
+  const journalDate = body.get('journalDate') as string;
 
-  if (journalEntryId === 'undefined') {
+  let journal = null;
+  try {
+    journal = await gqlRequest(request, GetJournalEntryByDate, {
+      date: format(new Date(journalDate), dateFormat),
+    });
+  } catch (err) {
+    console.log(
+      '🚀 ~ file: $journalDate.tsx ~ line 82 ~ constaction:ActionFunction= ~ err',
+      err
+    );
+  }
+
+  if (journal === null) {
     console.log('creating new journal entry.....');
     const data = await gqlRequest(request, CreateJournalEntryMutation, {
       input: {
-        date: new Date().toISOString(),
+        date: format(new Date(journalDate), dateFormat),
         json: JSON.parse(value),
         userId,
       },
@@ -88,22 +141,47 @@ export const action: ActionFunction = async (args) => {
 export default function JournalDate() {
   const submit = useSubmit();
   const { journalDate } = useParams();
+  const prevDate = format(
+    subDays(new Date(journalDate as string), 1),
+    dateFormat
+  );
+  const nextDate = format(
+    addDays(new Date(journalDate as string), 1),
+    dateFormat
+  );
+  const { journalEntry, initialValue } = useLoaderData();
+  console.log(
+    '🚀 ~ file: $journalDate.tsx ~ line 144 ~ JournalDate ~ journal',
+    journalEntry
+  );
   const title = format(new Date(journalDate as string), 'MMMM do, yyyy');
   const data = useActionData();
-  const journalEntryId = data?.id;
+  const journalEntryId = journalEntry?.id || data?.id;
 
   const handleSave = (value: Descendant[]) => {
     submit(
-      { value: JSON.stringify(value), data, journalEntryId },
+      {
+        value: JSON.stringify(value),
+        data,
+        journalEntryId,
+        journalDate: journalDate || format(new Date(), dateFormat),
+      },
       { method: 'post', replace: true }
     );
   };
+
   return (
     <>
-      <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <header className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex align-center justify-between">
+        <Link to={`/journal/${prevDate}`} className="p-2">
+          <span className="material-icons">arrow_left</span>
+        </Link>
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           {title}
         </h1>
+        <Link to={`/journal/${nextDate}`} className="p-2">
+          <span className="material-icons">arrow_right</span>
+        </Link>
       </header>
       <main>
         <div className="py-6 sm:px-6 lg:px-8">
@@ -128,12 +206,7 @@ export default function JournalDate() {
                 icon="format_list_bulleted"
               />,
             ]}
-            // initialValue={[
-            //   {
-            //     type: 'paragraph',
-            //     children: [{ text: '' }],
-            //   },
-            // ]}
+            initialValue={initialValue}
           />
         </div>
       </main>
