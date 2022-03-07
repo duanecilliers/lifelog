@@ -2,19 +2,58 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
+
+input IntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type JournalEntry {
+  date: DateTime!
+  id: ID!
+  json: JSON!
+  userId: Int!
+}
+
+input JournalEntryCreateInput {
+  date: DateTime!
+  json: JSON!
+  userId: Int!
+}
+
+input JournalEntryUpdateInput {
+  date: DateTimeFieldUpdateOperationsInput
+  id: Int!
+  json: JSON
+  userId: IntFieldUpdateOperationsInput
+}
+
 type LoginResponse {
   access_token: String!
   user: User!
 }
 
-input LoginUserInput {
-  email: String!
-  password: String!
-}
-
 type Mutation {
-  login(loginUserInput: LoginUserInput!): LoginResponse!
-  signup(loginUserInput: LoginUserInput!): LoginResponse!
+  createJournalEntry(journalEntry: JournalEntryCreateInput!): JournalEntry!
+  login(loginUserInput: UserCreateInput!): LoginResponse!
+  signup(loginUserInput: UserCreateInput!): LoginResponse!
+  updateJournalEntry(updateJournalEntry: JournalEntryUpdateInput!): JournalEntry!
   updateProfile(profile: UpdateProfileInput!): Profile!
 }
 
@@ -27,7 +66,31 @@ type Profile {
   userId: Int!
 }
 
+input ProfileCreateNestedOneWithoutUserInput {
+  connect: ProfileWhereUniqueInput
+  connectOrCreate: ProfileCreateOrConnectWithoutUserInput
+  create: ProfileCreateWithoutUserInput
+}
+
+input ProfileCreateOrConnectWithoutUserInput {
+  create: ProfileCreateWithoutUserInput!
+  where: ProfileWhereUniqueInput!
+}
+
+input ProfileCreateWithoutUserInput {
+  bio: String
+  birthDate: DateTime!
+  name: String
+}
+
+input ProfileWhereUniqueInput {
+  id: Int
+  userId: Int
+}
+
 type Query {
+  journalEntries: [JournalEntry!]!
+  journalEntryByDay(date: DateTime!): JournalEntry!
   profile(userId: Float!): Profile!
   profiles: [Profile!]!
   user(email: String!): User!
@@ -45,4 +108,10 @@ type User {
   email: String!
   id: Int!
   profile: Profile!
+}
+
+input UserCreateInput {
+  email: String!
+  password: String!
+  profile: ProfileCreateNestedOneWithoutUserInput
 }

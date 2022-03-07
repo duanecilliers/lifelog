@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { DataService } from '@lifelog/data';
 import { User } from '../users/entities/user.entity';
-import { LoginUserInput } from './dto/login-user.input';
+import { UserCreateInput } from '../@generated/prisma-nestjs-graphql/user/user-create.input';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +36,7 @@ export class AuthService {
     };
   }
 
-  async signup(loginUserInput: LoginUserInput) {
+  async signup(loginUserInput: UserCreateInput) {
     const user = await this.dataService.findUserByEmail(loginUserInput.email);
     if (user) {
       throw new BadRequestException(
